@@ -1,18 +1,28 @@
 // components/navbar/Navbar.tsx
 "use client";
 
-import { Menu, Avatar, UnstyledButton, MenuItem, Group, Text } from '@mantine/core';
-import { IconPhoto, IconCalendar, IconUserCircle, IconMessageCircle } from '@tabler/icons-react';
+import { Menu, Avatar, UnstyledButton, MenuItem, Group, Text, Button, rem } from '@mantine/core';
+import { IconCalendar, IconUserCircle, IconHome } from '@tabler/icons-react';
 import Link from 'next/link';
 
 export default function Navbar() {
   const userName = "Guest";
+  const iconStyle = { width: rem(18), height: rem(18) };
+
 
   return (
     <div className="w-full flex justify-between items-center py-4 px-6 shadow-md">
-      <Link href="/">
-        <span>@chat fix name</span>
-      </Link>
+      <Group>
+      <Link href="/" className="w-full">
+          <Button
+            variant="outline"
+            radius="lg"
+            leftSection={<IconHome style={iconStyle} />}
+            className="w-full flex items-center justify-center" 
+          >
+          </Button>
+        </Link>
+        </Group>
 
       <Group>
           <Text className="text-lg font-bold">@chat fix name</Text>

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import TestGemini from "@/components/test-gemini/page";
+import TestDeepgram from "@/components/test-deepgram/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
@@ -64,6 +65,12 @@ export default function Home() {
 
   return (
     <div>
+<<<<<<< HEAD
+=======
+      <p>Hello World</p>
+      <TestGemini />
+      <TestDeepgram />
+>>>>>>> eadfc043b936952f09526c1e47c9da719c4da7c2
       {user ? (
         <div>Logged in!</div>
       ) : (

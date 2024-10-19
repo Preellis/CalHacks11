@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const apiKey = process.env.GEMINI_API!;
   const fileManager = new GoogleAIFileManager(apiKey);
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         displayName: "Event Picture",
       }
     );
-
+    
     const prompt =
       "Parse this image into a .json file. Return the .json file only, do not return any other text. The .json file should be in the format of 'eventname', 'date', 'time', 'location'. If any values are not found, return null for that category in .json.";
 
