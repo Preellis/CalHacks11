@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Camera } from 'react-camera-pro';
+import { useRouter } from 'next/navigation';
 
 const Component: React.FC = () => {
     const camera = useRef<Camera | null>(null);
     const [image, setImage] = useState<string | null>(null);
+    const router = useRouter();
 
     const errorMessages = {
         noCamera: "No camera detected. Please check your device.",
@@ -12,10 +14,10 @@ const Component: React.FC = () => {
 
     //Saves photo to image state
     const SaveTakenPhoto = () => {
-    if (camera.current) {
-        const photo = camera.current.takePhoto();
-        setImage(photo);
-    }
+        if (camera.current) {
+            const photo = camera.current.takePhoto();
+            setImage(photo);
+        }
     };
 
     // Function that returns the photo taken in a specified file format
@@ -82,7 +84,6 @@ const Component: React.FC = () => {
                 borderRadius: '50%',
             }}
         >
-        Take photo
         </button>
 
         {/* Display taken photo
