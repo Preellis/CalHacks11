@@ -19,7 +19,6 @@ const Component: React.FC = () => {
         if (camera.current) {
             const photo = camera.current.takePhoto();
             setImage(photo);
-            console.log(photo)
         }
     };
 

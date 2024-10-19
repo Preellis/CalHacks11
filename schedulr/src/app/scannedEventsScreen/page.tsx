@@ -2,31 +2,27 @@
 
 import { useAtom } from 'jotai';
 import { imageAtom } from '@/atoms';
+import React, { useState } from "react";
+import axios from "axios";
 
 
 const ScannedEventsScreen: React.FC = () => {
     const [image, setImage] = useAtom(imageAtom);
+    const [result, setResult] = useState<string | null>(null);
 
-    // Function that returns the photo taken in a specified file format
-    const TakenPhoto2ImageFile = () => {
-
-        if (image) {
-            const base64Image = image;
-            const byteString = atob(base64Image.split(',')[1]);
-            const arrayBuffer = new ArrayBuffer(byteString.length);
-            const uintArray = new Uint8Array(arrayBuffer);
-            
-            for (let i = 0; i < byteString.length; i++) {
-            uintArray[i] = byteString.charCodeAt(i);
-            }
-
-            const blob = new Blob([uintArray], { type: 'image/jpeg' }); // Change MIME type to 'image/png' for PNG
-            const newFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-
-            return newFile;
+    const promptGemini = async () => {
+        try {
+        const res = await axios.get("/api/gemini")
+            setResult(res.data.response);
+        }
+        catch (error) {
+            console.error("Error fetching Gemini API result:", error);
+            setResult(null);
         }
     };
-    console.log(TakenPhoto2ImageFile());
+
+    promptGemini();
+
         
     return (
     <div>

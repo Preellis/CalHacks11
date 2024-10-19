@@ -78,6 +78,7 @@ export default function Home() {
 
   return (
     <div>
+      <TestGemini/>
       {user ? (
         <div>Logged in!</div>
       ) : (
