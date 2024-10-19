@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Camera } from 'react-camera-pro';
+import { Camera, CameraType } from 'react-camera-pro';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { imageAtom } from '@/atoms';
 
 const Component: React.FC = () => {
-    const camera = useRef<typeof Camera | null>(null);
+    const camera = useRef<CameraType>(null);
     const [image, setImage] = useAtom(imageAtom);
     const router = useRouter();
 
@@ -18,7 +18,7 @@ const Component: React.FC = () => {
     const SaveTakenPhoto = () => {
         if (camera.current) {
             const photo = camera.current.takePhoto();
-            setImage(photo);
+            setImage(photo.toString());
             console.log(photo)
         }
     };
@@ -30,48 +30,47 @@ const Component: React.FC = () => {
     };
 
     return (
-    <div style={{ position: 'relative', width: '100%', height: '93vh' }}>
-        {/* Camera video */}
-        <div
-            style={{
-                position: 'relative', 
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
+        <div style={{ position: 'relative', width: '100%', height: '93vh' }}>
+            {/* Camera video */}
+            <div
+                style={{
+                    position: 'relative', 
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
                 }}
-        >
-        <Camera 
-            ref={camera}
-            errorMessages={errorMessages}
-        />
+            >
+                <Camera 
+                    ref={camera}
+                    errorMessages={errorMessages}
+                />
+            </div>
+            
+            {/* Button */}
+            <button
+                onClick={HandleCamBtn}
+                style={{
+                    width: '100px',
+                    height: '100px',
+                    position: 'absolute',   // Positioning the button on top of the video
+                    bottom: '50px',         
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 10,             
+                    padding: '10px 20px',
+                    backgroundColor: '#ff6347', 
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                }}
+            >
+            </button>
+
+            {/* Display taken photo
+            {image && <img src={image} alt="Taken photo" />} */}
         </div>
-        
-
-        {/* Button */}
-        <button
-            onClick={HandleCamBtn}
-            style={{
-                width: '100px',
-                height: '100px',
-                position: 'absolute',   // Positioning the button on top of the video
-                bottom: '50px',         
-                left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 10,             
-                padding: '10px 20px',
-                backgroundColor: '#ff6347', 
-                color: 'white',
-                border: 'none',
-                borderRadius: '50%',
-            }}
-        >
-        </button>
-
-        {/* Display taken photo
-        {image && <img src={image} alt="Taken photo" />} */}
-    </div>
     );
 };
 
