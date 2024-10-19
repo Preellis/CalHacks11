@@ -5,19 +5,33 @@ import TestGemini from "@/components/test-gemini/page";
 import TestDeepgram from "@/components/test-deepgram/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { useAtom } from 'jotai';
+import { userAtom, userIdAtom } from '@/atoms';
 
 export default function Home() {
-  const [user, setUser] = useState<TokenResponse | null>(null);
+  const [user, setUser] = useAtom(userAtom);
+  const [userId, setUserId] = useAtom(userIdAtom);
   const [loggedIn, setLoggedIn] = useState(false);
   const router = useRouter();
 
   const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
+    onSuccess: async (tokenResponse) => {
       console.log(tokenResponse);
       setUser(tokenResponse);
-      setLoggedIn(true)
+      setLoggedIn(true);
+      
+      // Fetch user info to get the unique ID
+      try {
+        const userInfo = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        });
+        setUserId(userInfo.data.sub); // 'sub' is the unique Google user ID
+        console.log('User ID:', userInfo.data.sub);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
     },
-    scope: 'https://www.googleapis.com/auth/calendar.events',
+    scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile',
     onError: () => console.log('Login Failed'),
   });
 
@@ -72,6 +86,7 @@ export default function Home() {
       ) : (
         <button onClick={() => login()}>Sign in with Google</button>
       )}
+      {userId && <p>User ID: {userId}</p>}
     </div>
   );
 }
