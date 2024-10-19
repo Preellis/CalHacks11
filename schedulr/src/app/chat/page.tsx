@@ -2,22 +2,26 @@
 import { useState } from 'react';
 import { userAtom, userIdAtom } from '@/atoms'; 
 import { useAtom } from 'jotai';
+import Deepgram from 'deepgram'; // Import Deepgram
+import axios from 'axios';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [user] = useAtom(userAtom);
   const [userId] = useAtom(userIdAtom);
+  const deepgramApiKey = process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY; // Ensure you have this in your .env
 
-  const handleSendMessage = async () => {
-    if (!userInput.trim()) return;
+  const handleSendMessage = async (input: string) => {
+    if (!input.trim()) return;
 
     setLoading(true);
-    
-    setMessages((prevMessages) => [...prevMessages, `You: ${userInput}`]);
+    setMessages((prevMessages) => [...prevMessages, `You: ${input}`]);
 
     try {
+      // Send input to your API for processing
       const response = await fetch('/api/chroma/add-memory', {
         method: 'POST',
         headers: {
@@ -25,7 +29,7 @@ const ChatPage = () => {
         },
         body: JSON.stringify({
           userId,
-          documentText: userInput,
+          documentText: input,
         }),
       });
 
@@ -59,6 +63,26 @@ const ChatPage = () => {
     }
   };
 
+  // Handle voice input using Deepgram
+  const startRecording = () => {
+    setIsRecording(true);
+    const deepgram = new Deepgram(deepgramApiKey);
+
+    deepgram.transcription.live({ punctuate: true }).stream().on('data', (data) => {
+      if (data.channel && data.channel.alternatives[0]) {
+        const transcript = data.channel.alternatives[0].transcript;
+        setUserInput(transcript); // Set the input to the transcribed text
+      }
+    }).on('error', (error) => {
+      console.error('Transcription Error:', error);
+    });
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    // Logic to stop recording
+  };
+
   return (
     <div className="chat-container">
       <div className="messages-container">
@@ -75,10 +99,13 @@ const ChatPage = () => {
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Type your message here..."
-          disabled={loading}
+          disabled={loading || isRecording}
         />
-        <button onClick={handleSendMessage} disabled={loading || !userInput.trim()}>
+        <button onClick={handleSendMessage.bind(null, userInput)} disabled={loading || !userInput.trim()}>
           {loading ? 'Sending...' : 'Send'}
+        </button>
+        <button onClick={isRecording ? stopRecording : startRecording}>
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
         </button>
       </div>
 
@@ -115,7 +142,7 @@ const ChatPage = () => {
           align-self: flex-start;
         }
         .input-container {
-          display: flex;
+          display: flex
         }
         input {
           flex: 1;
