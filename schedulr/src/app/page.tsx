@@ -3,6 +3,8 @@ import { useState } from 'react';
 import TestGemini from "@/components/test-gemini/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import TestGemini from "@/components/testGemeni/page";
+import Link from "next/link";
 
 export default function Home() {
   const [user, setUser] = useState<TokenResponse | null>(null);
@@ -68,6 +70,8 @@ export default function Home() {
       ) : (
         <button onClick={() => login()}>Sign in with Google</button>
       )}
+      <TestGemini/>
+      <Link href={'/camera'}>Camera Page</Link>
     </div>
   );
 }
