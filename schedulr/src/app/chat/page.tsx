@@ -1,15 +1,15 @@
 "use client";
 import { useState } from 'react';
-import { userAtom, userIdAtom } from '@/atoms'; 
+import { userIdAtom } from '@/atoms'; 
 import { useAtom } from 'jotai';
+import axios from 'axios';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [user] = useAtom(userAtom);
   const [userId] = useAtom(userIdAtom);
-
+  console.log(messages)
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
@@ -18,35 +18,22 @@ const ChatPage = () => {
     setMessages((prevMessages) => [...prevMessages, `You: ${userInput}`]);
 
     try {
-      const response = await fetch('/api/chroma/add-memory', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          documentText: userInput,
-        }),
+      await axios.post('/api/chroma/add-memory', {
+        userId,
+        documentText: userInput,
       });
+      // Fetching the context to append
+      const contextResponse = await axios.post('/api/chroma/get-context', {
+        userId,
+        query: userInput
+      });
+      const contextResult = contextResponse.data;
 
-      const result = await response.json();
-
-      if (result.success) {
-        // Fetching the context to append
-        const contextResponse = await fetch('/api/chroma/get-context');
-        const contextResult = await contextResponse.json();
-
-        // Append the 3 closest matches or missing info to the messages
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          contextResult,
-        ]);
-      } else {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          `System: There was an error processing your request.`,
-        ]);
-      }
+      // Append the 3 closest matches or missing info to the messages
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ...contextResult,
+      ]);
     } catch (error) {
       console.error('Error:', error);
       setMessages((prevMessages) => [
@@ -63,7 +50,7 @@ const ChatPage = () => {
     <div className="chat-container">
       <div className="messages-container">
         {messages.map((message, index) => (
-          <div key={index} className={`message ${message.startsWith('You:') ? 'user' : 'system'}`}>
+          <div key={index} className={`message ${message?.startsWith('You:') ? 'user' : 'system'}`}>
             {message}
           </div>
         ))}
