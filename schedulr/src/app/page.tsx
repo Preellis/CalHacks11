@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import TestGemini from "@/components/test-gemini/page";
-import TestDeepgram from "@/components/test-deepgram/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import styles from "./styles.module.scss";
 
 export default function Home() {
   const [user, setUser] = useState<TokenResponse | null>(null);
@@ -63,14 +62,14 @@ export default function Home() {
   }, [loggedIn, router]);
 
   return (
-    <div>
-      <p>Hello World</p>
-      <TestGemini />
-      <TestDeepgram />
+    <div className={styles.container}>
       {user ? (
         <div>Logged in!</div>
       ) : (
-        <button onClick={() => login()}>Sign in with Google</button>
+        <button className={styles.loginBtn} onClick={() => login()}>
+          <img src="./googleIcon.png" alt=""/>
+          <span>Sign in with Google</span>
+        </button>
       )}
     </div>
   );

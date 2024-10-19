@@ -1,54 +1,24 @@
-// components/navbar/Navbar.tsx
-"use client";
-
-import { Menu, Avatar, UnstyledButton, MenuItem, Group, Text, Button, rem } from '@mantine/core';
-import { IconCalendar, IconUserCircle, IconHome } from '@tabler/icons-react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import styles from "./styles.module.scss";
 
 export default function Navbar() {
-  const userName = "Guest";
-  const iconStyle = { width: rem(18), height: rem(18) };
-
+  const [menuToggle, setMenuToggle] = useState<boolean>(false);
+  const [userToggle, setUserToggle] = useState<boolean>(false);
 
   return (
-    <div className="w-full flex justify-between items-center py-4 px-6 shadow-md">
-      <Group>
-      <Link href="/" className="w-full">
-          <Button
-            variant="outline"
-            radius="lg"
-            leftSection={<IconHome style={iconStyle} />}
-            className="w-full flex items-center justify-center" 
-          >
-          </Button>
-        </Link>
-        </Group>
-
-      <Group>
-          <Text className="text-lg font-bold">@chat fix name</Text>
-      </Group>
-
-      <Menu shadow="md" width={200}>
-        <Menu.Target>
-          <UnstyledButton>
-            <Avatar radius="xl" size="md">
-              {userName.charAt(0)}
-            </Avatar>
-          </UnstyledButton>
-        </Menu.Target>
-
-        <Menu.Dropdown>
-          <Menu.Label>Hi, {userName}</Menu.Label>
-          <MenuItem icon={<IconCalendar size={16} />}>
-            <Link href="https://calendar.google.com/" target="_blank">
-              View Calendar
-            </Link>
-          </MenuItem>
-          <MenuItem icon={<IconUserCircle size={16} />}>
-            Profile
-          </MenuItem>
-        </Menu.Dropdown>
-      </Menu>
+    <div className={styles.navContainer}>
+      <div onClick={() => setMenuToggle(!menuToggle)} className={menuToggle ? `${styles.menuIcon} ${styles.active}` : `${styles.menuIcon}`}>
+      </div>
+      <div className={styles.title}>
+        <h1>KronAI</h1>
+      </div>
+      <div onClick={() => setUserToggle(!userToggle)} className={styles.userIcon}>
+        <svg className={userToggle ? `` : `${styles.active}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000">
+          <path d="M6.57757 15.4816C5.1628 16.324 1.45336 18.0441 3.71266 20.1966C4.81631 21.248 6.04549 22 7.59087 22H16.4091C17.9545 22 19.1837 21.248 20.2873 20.1966C22.5466 18.0441 18.8372 16.324 17.4224 15.4816C14.1048 13.5061 9.89519 13.5061 6.57757 15.4816Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </div>
     </div>
   );
 }
