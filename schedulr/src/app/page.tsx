@@ -1,18 +1,20 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import TestGemini from "@/components/test-gemini/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import Link from "next/link";
 
 export default function Home() {
   const [user, setUser] = useState<TokenResponse | null>(null);
-  const [eventAdded, setEventAdded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const router = useRouter();
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       console.log(tokenResponse);
       setUser(tokenResponse);
+      setLoggedIn(true)
     },
     scope: 'https://www.googleapis.com/auth/calendar.events',
     onError: () => console.log('Login Failed'),
@@ -53,24 +55,20 @@ export default function Home() {
     }
   };
 
+  // Redirect to another page when eventAdded becomes true
+  useEffect(() => {
+    if (loggedIn) {
+      router.push('/mainFunction'); // Redirect to the desired page
+    }
+  }, [loggedIn, router]);
+
   return (
     <div>
-      {/* <p>Hello World</p> */}
-      <TestGemini />
       {user ? (
-        <div>
-          <div>Logged in!</div>
-          {eventAdded ? (
-            <div>Random event added to your calendar.</div>
-          ) : (
-            <button onClick={addRandomEvent}>Add Random Event to Calendar</button>
-          )}
-        </div>
+        <div>Logged in!</div>
       ) : (
         <button onClick={() => login()}>Sign in with Google</button>
       )}
-      <TestGemini/>
-      <Link href={'/camera'}>Camera Page</Link>
     </div>
   );
 }

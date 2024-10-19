@@ -45,15 +45,15 @@ const Component: React.FC = () => {
     };
 
     return (
-    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+    <div style={{ position: 'relative', width: '100%', height: '93vh' }}>
         {/* Camera video */}
         <div
             style={{
-                position: 'relative',  // Makes the video element take the entire space without overlapping the button
+                position: 'relative', 
                 top: 0,
                 left: 0,
-                width: '50%',
-                height: '50%',
+                width: '100%',
+                height: '100%',
                 objectFit: 'cover',
                 }}
         >
@@ -68,23 +68,25 @@ const Component: React.FC = () => {
         <button
             onClick={HandleCamBtn}
             style={{
+                width: '100px',
+                height: '100px',
                 position: 'absolute',   // Positioning the button on top of the video
-                bottom: '20px',         // Adjust this value to position the button as you want
+                bottom: '50px',         
                 left: '50%',
                 transform: 'translateX(-50%)',
-                zIndex: 10,             // Ensures the button stays above the video
+                zIndex: 10,             
                 padding: '10px 20px',
-                backgroundColor: '#ff6347', // Optional styling for the button
+                backgroundColor: '#ff6347', 
                 color: 'white',
                 border: 'none',
-                borderRadius: '5px',
+                borderRadius: '50%',
             }}
         >
         Take photo
         </button>
 
-        {/* Display taken photo */}
-        {image && <img src={image} alt="Taken photo" />}
+        {/* Display taken photo
+        {image && <img src={image} alt="Taken photo" />} */}
     </div>
     );
 };
