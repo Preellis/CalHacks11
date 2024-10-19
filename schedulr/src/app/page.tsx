@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import TestGemini from "@/components/test-gemini/page";
+import TestDeepgram from "@/components/test-deepgram/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
@@ -56,6 +57,7 @@ export default function Home() {
     <div>
       <p>Hello World</p>
       <TestGemini />
+      <TestDeepgram />
       {user ? (
         <div>
           <div>Logged in!</div>
