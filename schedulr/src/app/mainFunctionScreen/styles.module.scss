@@ -1,0 +1,8 @@
+@import "@/app/colorscheme.scss";
+
+.cameraContainer {
+  position: relative;
+  height: calc(100vh - 220px);
+  background-color: rgba($light, 0.5);
+  padding: 20px;
+}

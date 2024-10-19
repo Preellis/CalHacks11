@@ -77,13 +77,25 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.header}>KronAI</h1>
+      <div className={styles.descriptionContainer}>
+        <h3>Plan Smarter,</h3>
+        <h3>Schedule Faster,</h3>
+        <h3>Powered by AI.</h3>
+      </div>
       {user ? (
         <div>Logged in!</div>
       ) : (
-        <button className={styles.loginBtn} onClick={() => login()}>
-          <img src="./googleIcon.png" alt=""/>
-          <span>Sign in with Google</span>
-        </button>
+        <>
+          <button className={styles.loginBtn} onClick={() => login()}>
+            <img src="/googleicon.webp" alt="GOOGLE"/>
+            <span>Sign in with Google</span>
+          </button>
+          <button className={styles.loginBtn} onClick={() => login()}>
+            <img src="/appleicon.png" alt="APPLE" style={{padding: "5px"}}/>
+            <span>Sign in with Apple</span>
+          </button>
+        </>
       )}
       {userId && <p>User ID: {userId}</p>}
     </div>

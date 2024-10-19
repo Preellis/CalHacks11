@@ -35,7 +35,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
  
     const uploadResult = await fileManager.uploadFile(
-      `./src/public/event_sample.jpg`,
+      `/event_sample.jpg`,
       {
         mimeType: "image/jpeg",
         displayName: "Event Picture",
