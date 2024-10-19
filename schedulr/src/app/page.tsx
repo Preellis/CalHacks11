@@ -4,6 +4,7 @@ import TestGemini from "@/components/test-gemini/page";
 import TestDeepgram from "@/components/test-deepgram/page";
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import Link from "next/link";
 
 export default function Home() {
   const [user, setUser] = useState<TokenResponse | null>(null);
@@ -70,6 +71,8 @@ export default function Home() {
       ) : (
         <button onClick={() => login()}>Sign in with Google</button>
       )}
+      <TestGemini/>
+      <Link href={'/camera'}>Camera Page</Link>
     </div>
   );
 }
