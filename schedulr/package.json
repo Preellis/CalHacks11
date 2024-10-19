@@ -38,6 +38,7 @@
     "react-dom": "^18",
     "sass": "^1.80.3",
     "socket.io-client": "^4.8.0",
+    "styled-components": "^6.1.13",
     "webpack": "^5.95.0",
     "ws": "^8.18.0"
   },
