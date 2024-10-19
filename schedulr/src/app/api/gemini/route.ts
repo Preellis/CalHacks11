@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const apikey = process.env.GEMINI_API_KEY!;
-  const fileManager = new GoogleAIFileManager(apikey);
-  const genAI = new GoogleGenerativeAI(apikey);
+  const apiKey = process.env.GEMINI_API!;
+  const fileManager = new GoogleAIFileManager(apiKey);
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   try {
-    console.log("Before IMG Upload");
     const uploadResult = await fileManager.uploadFile(
       `./src/public/event_sample.jpg`,
       {
@@ -23,11 +21,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const getResponse = await fileManager.getFile(uploadResult.file.name);
 
-    // View the response.
-    console.log(
-      `Retrieved file ${getResponse.displayName} as ${getResponse.uri}`
-    );
-
     const response = await model.generateContent([
       prompt,
       {
@@ -38,7 +31,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
     ]);
 
-    const result = await response.response.text();
+    const result = response.response.text();
 
     return NextResponse.json({ response: result });
   } catch (error) {
