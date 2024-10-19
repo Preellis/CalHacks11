@@ -19,6 +19,7 @@ export default function testGemini() {
   return (
     <div>
       <button onClick={testGemini}>Test Gemini</button>
+      <p>{result}</p>
     </div>
   );
 }

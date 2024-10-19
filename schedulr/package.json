@@ -27,6 +27,7 @@
     "chromadb-default-embed": "^2.13.2",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^7.1.0",
+    "fs": "^0.0.1-security",
     "googleapis": "^144.0.0",
     "jotai": "^2.10.1",
     "jwt-decode": "^4.0.0",
