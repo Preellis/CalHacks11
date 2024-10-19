@@ -1,7 +1,11 @@
 "use client"
+import { userAtom } from '@/atoms';
 import Camera from '@/components/CameraComponent/page';
+import { useAtom } from 'jotai';
 
 export default function Home() {
+  const [user, setUser] = useAtom(userAtom);
+  console.log(user);
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         console.log("Browser supports camera access");
       } else {
