@@ -1,8 +1,7 @@
 "use client";
 import type { Metadata } from "next";
-import "./globals.css";
+import "./globals.scss";
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { MantineProvider } from '@mantine/core';
 import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 
@@ -20,11 +19,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-          <MantineProvider>
-            <Navbar />
-              {children}
-            <Footer />
-          </MantineProvider>
+          <Navbar />
+          {children}
         </GoogleOAuthProvider>
       </body>
     </html>

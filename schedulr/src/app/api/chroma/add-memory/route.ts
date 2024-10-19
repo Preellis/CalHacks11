@@ -19,3 +19,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   });
   return NextResponse.json({ success: true });
 }
+
+/**
+Example usage:
+const userId = useAtomValue(userIdAtom);
+const saveMemory = async (documentText: string) => {
+  await axios.post('/api/chroma/add-memory', {
+    userId: userId,
+    documentText: documentText
+  });
+}
+*/

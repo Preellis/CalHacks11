@@ -1,9 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Camera } from 'react-camera-pro';
+import { useRouter } from 'next/navigation';
+import { useAtom } from 'jotai';
+import { imageAtom } from '@/atoms';
 
 const Component: React.FC = () => {
-    const camera = useRef<Camera | null>(null);
-    const [image, setImage] = useState<string | null>(null);
+    const camera = useRef<typeof Camera | null>(null);
+    const [image, setImage] = useAtom(imageAtom);
+    const router = useRouter();
 
     const errorMessages = {
         noCamera: "No camera detected. Please check your device.",
@@ -12,36 +16,17 @@ const Component: React.FC = () => {
 
     //Saves photo to image state
     const SaveTakenPhoto = () => {
-    if (camera.current) {
-        const photo = camera.current.takePhoto();
-        setImage(photo);
-    }
-    };
-
-    // Function that returns the photo taken in a specified file format
-    const TakenPhoto2ImageFile = () => {
-
         if (camera.current) {
-            const base64Image = image;
-            const byteString = atob(base64Image.split(',')[1]);
-            const arrayBuffer = new ArrayBuffer(byteString.length);
-            const uintArray = new Uint8Array(arrayBuffer);
-            
-            for (let i = 0; i < byteString.length; i++) {
-            uintArray[i] = byteString.charCodeAt(i);
-            }
-
-            const blob = new Blob([uintArray], { type: 'image/jpeg' }); // Change MIME type to 'image/png' for PNG
-            const newFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
-
-            return newFile;
+            const photo = camera.current.takePhoto();
+            setImage(photo);
+            console.log(photo)
         }
     };
 
     //Function that handles entire functionality of camera button
     const HandleCamBtn = () => {
         SaveTakenPhoto();
-        TakenPhoto2ImageFile();
+        router.push('/scannedEventsScreen')
     };
 
     return (
@@ -82,7 +67,6 @@ const Component: React.FC = () => {
                 borderRadius: '50%',
             }}
         >
-        Take photo
         </button>
 
         {/* Display taken photo
