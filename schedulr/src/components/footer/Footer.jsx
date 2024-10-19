@@ -3,6 +3,7 @@
 
 import { Button, Group, rem } from '@mantine/core';
 import { IconPhoto, IconCamera, IconMicrophone } from '@tabler/icons-react';
+import Link from 'next/link';
 
 export default function Footer() {
     const iconStyle = { width: rem(18), height: rem(18) };
@@ -18,6 +19,7 @@ export default function Footer() {
         >
         </Button>
 
+        <Link href="/camera" className="w-full">
         <Button
           variant="outline"
           radius="lg"
@@ -25,6 +27,7 @@ export default function Footer() {
           className="w-full flex items-center justify-center" 
         >
         </Button>
+        </Link>
 
         <Button
           variant="outline"
