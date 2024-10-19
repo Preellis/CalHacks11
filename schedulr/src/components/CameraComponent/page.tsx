@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { imageAtom } from '@/atoms';
 
 const Component: React.FC = () => {
-    const camera = useRef<Camera | null>(null);
+    const camera = useRef<typeof Camera | null>(null);
     const [image, setImage] = useAtom(imageAtom);
     const router = useRouter();
 
@@ -26,7 +26,7 @@ const Component: React.FC = () => {
     //Function that handles entire functionality of camera button
     const HandleCamBtn = () => {
         SaveTakenPhoto();
-        router.push('../scannedEventsScreen')
+        router.push('/scannedEventsScreen')
     };
 
     return (

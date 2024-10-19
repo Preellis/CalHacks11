@@ -1,8 +1,10 @@
+'use client';
+
 import { useAtom } from 'jotai';
 import { imageAtom } from '@/atoms';
 
 
-export default function ScannedEventsScreen() {
+const ScannedEventsScreen: React.FC = () => {
     const [image, setImage] = useAtom(imageAtom);
 
     // Function that returns the photo taken in a specified file format
@@ -32,3 +34,4 @@ export default function ScannedEventsScreen() {
     </div>
     );
 };
+export default ScannedEventsScreen;
