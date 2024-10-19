@@ -1,27 +1,26 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 export default function testGemini() {
   const [result, setResult] = useState<string | null>(null);
 
-  useEffect(() => {
-    axios.get("/api/gemini")
-      .then((response) => {
-        setResult(response.data.response);
-      })
-      .catch((error) => {
-        console.error("Error fetching Gemini API result:", error);
-        setResult(null);
-      });
-  }, []);
-  
+  const testGemini = async () => {
+    try {
+      const res = await axios.get("/api/gemini")
+      setResult(res.data.response);
+    }
+    catch (error) {
+      console.error("Error fetching Gemini API result:", error);
+      setResult(null);
+    }
+  };
 
   console.log(result);
 
   return (
     <div>
-      <p>Gemini Tester</p>
+      <button onClick={testGemini}>Test Gemini</button>
     </div>
   );
 }
