@@ -65,12 +65,9 @@ export default function Home() {
 
   return (
     <div>
-<<<<<<< HEAD
-=======
       <p>Hello World</p>
       <TestGemini />
       <TestDeepgram />
->>>>>>> eadfc043b936952f09526c1e47c9da719c4da7c2
       {user ? (
         <div>Logged in!</div>
       ) : (
