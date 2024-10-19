@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { imageAtom } from '@/atoms';
 
 const Component: React.FC = () => {
-    const camera = useRef<typeof Camera | null>(null);
+    const camera = useRef<>(null);
     const [image, setImage] = useAtom(imageAtom);
     const router = useRouter();
 
