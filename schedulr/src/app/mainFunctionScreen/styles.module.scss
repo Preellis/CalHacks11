@@ -1,8 +1,61 @@
 @import "@/app/colorscheme.scss";
 
-.cameraContainer {
+.container {
   position: relative;
-  height: calc(100vh - 220px);
-  background-color: rgba($light, 0.5);
-  padding: 20px;
+
+
+  .darkBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba($dark, 0);
+    backdrop-filter: blur(0px);
+    z-index: 4;
+    transition: background-color 0.15s cubic-bezier(0.76, 1, 0.24, 0),
+                backdrop-filter 0.15s cubic-bezier(0.76, 1, 0.24, 0);
+    &.active {
+      background-color: rgba($dark, 0.15);
+      backdrop-filter: blur(8px);
+    }
+  }
+  .cameraContainer {
+    position: relative;
+    height: calc(100vh - 220px);
+    background-color: rgba($light, 0.5);
+    .cameraLens {
+      position: 'relative'; 
+      top: 0;
+      left: 0;
+      width: '100%';
+      height: '100%';
+      object-fit: 'cover';
+    }
+    .snap {
+      position: absolute;
+      bottom: -110px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      z-index: 1;
+      .btnContainer {
+        height: 90%;
+        width: 90%;
+        border: 3px solid rgba($dark, 1);
+        border-radius: 50%;
+        cursor: pointer;
+        scale: 1;
+        transition: scale 0.05s cubic-bezier(0.76, 1, 0.24, 0);
+        &:active {
+          scale: 0.95;
+        }
+      }
+    }
+  } 
 }

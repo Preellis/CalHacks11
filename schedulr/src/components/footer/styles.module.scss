@@ -18,30 +18,15 @@
     justify-content: center;
     align-items: center;
     aspect-ratio: 1/1;
+    cursor: pointer;
+    scale: 1;
+    transition: scale 0.05s cubic-bezier(0.76, 1, 0.24, 0);
+    &:active {
+      scale: 0.93;
+    }
     svg {
       width: 50%;
       height: 50%;
-    }
-  }
-  .snap {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-    .btnContainer {
-      height: 90%;
-      width: 90%;
-      border: 3px solid rgba($dark, 1);
-      border-radius: 50%;
-      cursor: pointer;
-      scale: 1;
-      transition: scale 0.05s cubic-bezier(0.76, 1, 0.24, 0);
-      &:active {
-        scale: 0.95;
-      }
     }
   }
 }
