@@ -9,7 +9,7 @@ import styles from './styles.module.scss';
 export default function MainFunctionScreen() {
   const [user, setUser] = useAtom(userAtom);
   console.log(user);
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (navigator.mediaDevices) {
         console.log("Browser supports camera access");
       } else {
         console.log("Browser does not support camera access");
