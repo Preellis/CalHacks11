@@ -50,7 +50,6 @@ export default function Home() {
         }
       );
       console.log('Event created: ', response.data.htmlLink);
-      setEventAdded(true);
     } catch (error) {
       console.error('Error creating event: ', error);
     }
