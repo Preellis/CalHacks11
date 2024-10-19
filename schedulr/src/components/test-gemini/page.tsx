@@ -16,8 +16,6 @@ export default function testGemini() {
     }
   };
 
-  console.log(result);
-
   return (
     <div>
       <button onClick={testGemini}>Test Gemini</button>

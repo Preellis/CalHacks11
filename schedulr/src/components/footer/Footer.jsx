@@ -1,36 +1,37 @@
 // components/footer/Footer.tsx
-import { Button, Group } from '@mantine/core';
+"use client";
+
+import { Button, Group, rem } from '@mantine/core';
 import { IconPhoto, IconCamera, IconMicrophone } from '@tabler/icons-react';
 
 export default function Footer() {
+    const iconStyle = { width: rem(18), height: rem(18) };
+
   return (
-    <div className="w-full fixed bottom-0 bg-gray-100 shadow-md py-4">
-      <Group position="apart" grow className="px-6">
+    <div className="fixed bottom-0 left-0 w-full justify-between items-center shadow-md ">        
+        <Group className="w-full flex justify-between items-center py-4 px-6 shadow-md">
         <Button
           variant="outline"
           radius="lg"
-          leftIcon={<IconPhoto />}
-          className="w-full"
+          leftSection={<IconPhoto style={iconStyle} />}
+          className="w-full flex items-center justify-center" 
         >
-          Gallery
         </Button>
 
         <Button
           variant="outline"
           radius="lg"
-          leftIcon={<IconCamera />}
-          className="w-full"
+          leftSection={<IconCamera style={iconStyle} />}
+          className="w-full flex items-center justify-center" 
         >
-          Camera
         </Button>
 
         <Button
           variant="outline"
           radius="lg"
-          leftIcon={<IconMicrophone />}
-          className="w-full"
+           leftSection={<IconMicrophone style={iconStyle} />}
+           className="w-full flex items-center justify-center" 
         >
-          Voice-to-Text
         </Button>
       </Group>
     </div>
