@@ -3,7 +3,7 @@ import { userAtom } from '@/atoms';
 import Camera from '@/components/CameraComponent/page';
 import { useAtom } from 'jotai';
 
-export default function Home() {
+export default function MainFunctionScreen() {
   const [user, setUser] = useAtom(userAtom);
   console.log(user);
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -17,4 +17,4 @@ export default function Home() {
         <Camera/>
       </div>
     );
-  }
+  };
