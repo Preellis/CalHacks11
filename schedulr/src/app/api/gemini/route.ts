@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const apiKey = process.env.GEMINI_API!;
+  const apiKey = process.env.GEMINI_API;
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   try {
     const { prompt } = await request.json();
-    const response = await model.generateContent([prompt]);
-    const result = response.response.text();
-    return NextResponse.json({ response: result });
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    return NextResponse.json({ response: text });
   } catch (error) {
     console.error("Error generating content:", error);
-    return NextResponse.json({ error: "An error occurred while processing the image" }, { status: 500 });
+    return NextResponse.json({ error: "An error occurred when parsing text" }, { status: 500 });
   }
 }

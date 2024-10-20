@@ -29,6 +29,7 @@
     "chromadb-default-embed": "^2.13.2",
     "dayjs": "^1.11.13",
     "deepgram": "^1.0.3",
+    "dotenv": "^16.4.5",
     "embla-carousel-react": "^7.1.0",
     "fs": "^0.0.1-security",
     "googleapis": "^144.0.0",
