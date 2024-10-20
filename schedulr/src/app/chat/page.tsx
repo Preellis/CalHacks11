@@ -1,54 +1,85 @@
 "use client";
 import { useState } from 'react';
-import { userAtom, userIdAtom } from '@/atoms'; 
+import { userIdAtom } from '@/atoms'; 
 import { useAtom } from 'jotai';
 import Deepgram from 'deepgram'; // Import Deepgram
 import axios from 'axios';
+
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [user] = useAtom(userAtom);
-  const [userId] = useAtom(userIdAtom);
-  const deepgramApiKey = process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY; // Ensure you have this in your .env
 
-  const handleSendMessage = async (input: string) => {
-    if (!input.trim()) return;
+  const [userId] = useAtom(userIdAtom);
+
+  const handleSendMessage = async () => {
+    if (!userInput.trim()) return;
 
     setLoading(true);
-    setMessages((prevMessages) => [...prevMessages, `You: ${input}`]);
+    setMessages((prevMessages) => [...prevMessages, `You: ${userInput}`]);
 
     try {
-      // Send input to your API for processing
-      const response = await fetch('/api/chroma/add-memory', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          documentText: input,
-        }),
+      // Step 1: Save user input to Chroma DB
+      await axios.post('/api/chroma/add-memory', {
+        userId,
+        documentText: userInput,
       });
 
-      const result = await response.json();
+      // Step 2: Fetch context from Chroma DB
+      const contextResponse = await axios.post('/api/chroma/get-context', {
+        userId,
+        query: userInput,
+      });
+      const contextResult = contextResponse.data;
 
-      if (result.success) {
-        // Fetching the context to append
-        const contextResponse = await fetch('/api/chroma/get-context');
-        const contextResult = await contextResponse.json();
+      // Step 3: Check with Gemini if it's an event and gather details
+      const geminiResponse = await axios.post('/api/gemini', {
+        context: contextResult,
+      });
+      const { isPublicEvent, jsonEventTitle } = geminiResponse.data;
 
-        // Append the 3 closest matches or missing info to the messages
+      // Step 4: Handle event processing
+      if (isPublicEvent) {
+        const eventDetails = await axios.post('/api/gemini/get-event-details', {
+          eventTitle: jsonEventTitle,
+        });
+
+        // Create the final JSON for Google Calendar
+        const gcalEvent = {
+          summary: eventDetails.data.summary,
+          location: eventDetails.data.location,
+          start: {
+            dateTime: eventDetails.data.dateTime,
+          },
+          end: {
+            dateTime: eventDetails.data.endDateTime,
+          },
+        };
+
+        // Step 5: Add the event to Google Calendar
+        await axios.post('/api/gcal/add-event', gcalEvent);
         setMessages((prevMessages) => [
           ...prevMessages,
-          contextResult,
+          'System: The event has been added to your Google Calendar.',
         ]);
       } else {
+        // If it's not a public event, add directly to Google Calendar
+        const gcalEvent = {
+          summary: userInput,
+          start: {
+            dateTime: new Date().toISOString(), // Placeholder: use actual date/time if provided
+          },
+          end: {
+            dateTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // Default to 1 hour later
+          },
+        };
+
+        await axios.post('/api/gcal/add-event', gcalEvent);
         setMessages((prevMessages) => [
           ...prevMessages,
-          `System: There was an error processing your request.`,
+          'System: The event has been added to your Google Calendar.',
         ]);
       }
     } catch (error) {
@@ -63,12 +94,14 @@ const ChatPage = () => {
     }
   };
 
-  // Handle voice input using Deepgram
+  // Function to start voice recording
   const startRecording = () => {
     setIsRecording(true);
-    const deepgram = new Deepgram(deepgramApiKey);
+    const deepgram = new Deepgram(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
 
-    deepgram.transcription.live({ punctuate: true }).stream().on('data', (data) => {
+    const stream = deepgram.transcription.live({ punctuate: true }).stream();
+
+    stream.on('data', (data) => {
       if (data.channel && data.channel.alternatives[0]) {
         const transcript = data.channel.alternatives[0].transcript;
         setUserInput(transcript); // Set the input to the transcribed text
@@ -82,6 +115,19 @@ const ChatPage = () => {
     setIsRecording(false);
     // Logic to stop recording
   };
+
+
+  // const chromaContext = messages;
+  // const prompt = "Is {chromaContext} a public event? If yes, then, summarize "who" "what" "when" "Where" of this event, and convert to json. If it is not public event, but still an event, summarize the who where when and what of the event and if you are missing anything carry out a normal conversation to figure it out. Then, assemble the idea into a json to make into a google calendar event. Store this final "one line" as the jsonEventTitle of the gcal event. if the query is completely unrelated to an event, like a normal random conversation, then come up with a response for them and set it to chatResponse.""
+  // serve this prompt to gemini. if no prompt, then call gemini on altrpompt. if no altprompt set as '' and return "hi how can i help". Otherwise, we serve altprompt = "Come up with a response for this query: {chromaContext} and set it to chatResponse.""
+  // call altprompt to gemini. 
+  // call addToGcal(jsonEventTitle);
+  // func makes new event w title of jsonEventTitle.
+
+  // if success, set chatResponse to "added to Gcal". 
+  // else, set chatResponse to "unable to add to Gcal at the moment."
+
+
 
   return (
     <div className="chat-container">
@@ -101,7 +147,7 @@ const ChatPage = () => {
           placeholder="Type your message here..."
           disabled={loading || isRecording}
         />
-        <button onClick={handleSendMessage.bind(null, userInput)} disabled={loading || !userInput.trim()}>
+        <button onClick={handleSendMessage} disabled={loading || !userInput.trim()}>
           {loading ? 'Sending...' : 'Send'}
         </button>
         <button onClick={isRecording ? stopRecording : startRecording}>
