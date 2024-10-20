@@ -42,7 +42,8 @@ const ChatPage = () => {
         let jsonEvent: CalendarEvent | string = ""
         try {
           jsonEvent = JSON.parse(geminiResponse.data.response.split("```json")[1].split("```")[0]);
-        } catch (_) {
+        } catch (e) {
+          console.log(e);
           jsonEvent = "";
         }
 
