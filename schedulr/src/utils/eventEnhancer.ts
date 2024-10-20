@@ -45,7 +45,7 @@ not found, return null for that category in .json.
       timeZone: 'America/Los_Angeles',
     },
     end: {
-      dateTime: new Date(event.start ?? (Date.now() + 3600000)).toISOString(), // + 1 hour
+      dateTime: new Date(event.end ?? (Date.now() + 3600000)).toISOString(), // + 1 hour
       timeZone: 'America/Los_Angeles',
     },
   };
