@@ -19,8 +19,20 @@
     align-items: center;
     aspect-ratio: 1/1;
     cursor: pointer;
+    background-color: transparent;
     scale: 1;
     transition: scale 0.05s cubic-bezier(0.76, 1, 0.24, 0);
+    .fileUpload {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: transparent;
+      pointer-events: auto;
+      opacity: 0;
+      cursor: pointer;
+    }
     &:active {
       scale: 0.93;
     }
