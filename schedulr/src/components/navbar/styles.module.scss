@@ -1,6 +1,7 @@
 @import "@/app/colorscheme.scss";
 
 .navContainer {
+  position: relative;
   display: flex;
   top: 0;
   width: 100%;
@@ -12,6 +13,7 @@
   justify-content: space-between;
   align-content: center;
   box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.2);
+  z-index: 10;
   .menuIcon {
     margin: 5px;
     background: $dark;
@@ -69,6 +71,38 @@
       transition: fill 0.15s cubic-bezier(0.76, 1, 0.24, 0);
       &.active {
         fill: white;
+      }
+    }
+  }
+  .utilities {
+    position: absolute;
+    bottom: -130px;
+    right: 30px;
+    .utilitiesContainer {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      .mapBtn, .exitBtn {
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        background-color: $light;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(100px);
+        transition: transform 0.2s cubic-bezier(0.82, 0.6, 0.18, 0.4);
+        cursor: pointer;
+        &.active {
+          transform: translateX(0px);
+        }
+      }
+      .exitBtn {
+        transition-delay: 0.05s;
       }
     }
   }

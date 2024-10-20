@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-          <Navbar />
           {children}
         </GoogleOAuthProvider>
       </body>

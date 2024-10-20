@@ -1,15 +1,15 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TokenResponse, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import styles from "./styles.module.scss";
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { userAtom, userIdAtom } from '@/atoms';
 
 export default function Home() {
   const [user, setUser] = useAtom(userAtom);
-  const [userId, setUserId] = useAtom(userIdAtom);
+  const setUserId = useSetAtom(userIdAtom);
   const [loggedIn, setLoggedIn] = useState(false);
   const router = useRouter();
 
@@ -34,40 +34,6 @@ export default function Home() {
     onError: () => console.log('Login Failed'),
   });
 
-  const addRandomEvent = async () => {
-    if (!user) return;
-
-    const event = {
-      summary: 'Random Event',
-      location: 'Somewhere',
-      description: 'This is a randomly generated event',
-      start: {
-        dateTime: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-        timeZone: 'America/Los_Angeles',
-      },
-      end: {
-        dateTime: new Date(Date.now() + 90000000).toISOString(), // Tomorrow + 1 hour
-        timeZone: 'America/Los_Angeles',
-      },
-    };
-
-    try {
-      const response = await axios.post(
-        'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-        event,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      console.log('Event created: ', response.data.htmlLink);
-    } catch (error) {
-      console.error('Error creating event: ', error);
-    }
-  };
-
   // Redirect to another page when eventAdded becomes true
   useEffect(() => {
     if (loggedIn) {
@@ -77,15 +43,29 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.header}>KronAI</h1>
+      <div className={styles.descriptionContainer}>
+        <h3>Plan Smarter,</h3>
+        <h3>Schedule Faster,</h3>
+        <h3>Powered by AI.</h3>
+      </div>
       {user ? (
-        <div>Logged in!</div>
-      ) : (
-        <button className={styles.loginBtn} onClick={() => login()}>
-          <img src="./googleIcon.png" alt=""/>
-          <span>Sign in with Google</span>
+        <button className={styles.loginBtn} style={{justifyContent: "center", gap: "10px"}} onClick={() => router.push('/mainFunctionScreen')}>
+          <span>You are logged in!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
+      ) : (
+        <>
+          <button className={styles.loginBtn} onClick={() => login()}>
+            <img src="/googleicon.webp" alt="GOOGLE"/>
+            <span>Sign in with Google</span>
+          </button>
+          <button className={styles.loginBtn} onClick={() => null}>
+            <img src="/appleicon.png" alt="APPLE" style={{padding: "5px"}}/>
+            <span>Sign in with Apple</span>
+          </button>
+        </>
       )}
-      {userId && <p>User ID: {userId}</p>}
     </div>
   );
 }

@@ -15,18 +15,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Create the event
     const event = {
-        summary: eventDetails.summary, // Event title
+        title: eventDetails.title, // Event title
         location: eventDetails.location, // Event location
-        description: eventDetails.description, // Event description
+
         start: {
-          dateTime: eventDetails.startDateTime, // Start time in ISO format
-          timeZone: 'America/Los_Angeles', // Adjust based on user's time zone
+          dateTime: eventDetails.dateTime, // Start time in ISO format
+      
         },
         end: {
           dateTime: eventDetails.endDateTime, // End time in ISO format
-          timeZone: 'America/Los_Angeles', // Adjust based on user's time zone
+      
         },
-        attendees: eventDetails.attendees?.map((email: string) => ({ email })), // Add attendees if any
+      
         reminders: {
           useDefault: false,
           overrides: [

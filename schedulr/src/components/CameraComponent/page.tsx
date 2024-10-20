@@ -7,6 +7,7 @@ import { imageAtom } from '@/atoms';
 const Component: React.FC = () => {
     const camera = useRef<CameraType>(null);
     const [image, setImage] = useAtom(imageAtom);
+    const [confirm, setConfirm] = useState(false);
     const router = useRouter();
 
     const errorMessages = {
@@ -23,10 +24,13 @@ const Component: React.FC = () => {
         }
     };
 
+    const ConfirmationPopup = () => {
+        setConfirm(true);
+    }
+
     //Function that handles entire functionality of camera button
     const HandleCamBtn = () => {
         SaveTakenPhoto();
-        router.push('/scannedEventsScreen')
     };
 
     return (
@@ -47,26 +51,6 @@ const Component: React.FC = () => {
                     errorMessages={errorMessages}
                 />
             </div>
-            
-            {/* Button */}
-            <button
-                onClick={HandleCamBtn}
-                style={{
-                    width: '100px',
-                    height: '100px',
-                    position: 'absolute',   // Positioning the button on top of the video
-                    bottom: '50px',         
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    zIndex: 10,             
-                    padding: '10px 20px',
-                    backgroundColor: '#ff6347', 
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                }}
-            >
-            </button>
 
             {/* Display taken photo
             {image && <img src={image} alt="Taken photo" />} */}
