@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useRef } from 'react';
 import { userAtom, userIdAtom } from '@/atoms';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 import styles from './styles.module.scss';
@@ -22,7 +22,7 @@ export default function MainFunctionScreen() {
   };
 
   if (navigator.mediaDevices) {
-      console.log("Browser supports camera access");
+    console.log("Browser supports camera access");
   } else {
     console.log("Browser does not support camera access");
   }
@@ -37,7 +37,7 @@ export default function MainFunctionScreen() {
       const initialEvent = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
       const enhancedEvent = await eventEnhancer(initialEvent, user, userId)
       console.log(enhancedEvent)
-      
+
     }
   };
 
