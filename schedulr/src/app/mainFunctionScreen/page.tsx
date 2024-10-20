@@ -1,25 +1,20 @@
 "use client"
-import React, { useState, useRef, createContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { userAtom, userIdAtom } from '@/atoms';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 import styles from './styles.module.scss';
 import { Camera, CameraType } from 'react-camera-pro';
-import { useRouter } from 'next/navigation';
-import { imageAtom } from '@/atoms';
 import { MenuContext } from '@/commons/context/menuContext';
 import axios from 'axios';
 import { eventEnhancer } from '@/utils/eventEnhancer';
 
 export default function MainFunctionScreen() {
-  const router = useRouter();
   const camera = useRef<CameraType>(null);
-  const [user, setUser] = useAtom(userAtom);
-  const [userId, setUserId] = useAtom(userIdAtom);
-  const [image, setImage] = useAtom(imageAtom);
+  const user = useAtomValue(userAtom);
+  const userId = useAtomValue(userIdAtom);
   const [menuStatus, setMenuStatus] = useState(false);
-  console.log(user);
 
   const errorMessages = {
     noCamera: "No camera detected. Please check your device.",
@@ -35,10 +30,8 @@ export default function MainFunctionScreen() {
   const HandleCamBtn = async () => {
     if (camera.current) {
       const photo = camera.current.takePhoto();
-      setImage(photo.toString());
-      console.log(photo)
       const res = await axios.post("/api/gemini/image-to-calendar", {
-        base64Image: image
+        base64Image: photo
       })
       const initialEvent = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
       const enhancedEvent = await eventEnhancer(initialEvent, user, userId)
