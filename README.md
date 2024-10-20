@@ -1,4 +1,5 @@
 # KronAI (CalHacks 11.0)
+![small](https://github.com/user-attachments/assets/0f1c00c8-0b8f-4752-ae2a-37c0560d71a1)
 ## Inspiration
 Have you ever received a concert flyer or a graphical timeline, hoping to add it to your calendar, but finding it too tedious to add them event to event. This is the exact problem we are inspired by and want to solve.
 ## What it does
