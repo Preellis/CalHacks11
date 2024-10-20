@@ -37,7 +37,6 @@ export default function MainFunctionScreen() {
       const initialEvent = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
       const enhancedEvent = await eventEnhancer(initialEvent, user, userId)
       console.log(enhancedEvent)
-
     }
   };
 
