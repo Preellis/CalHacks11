@@ -16,8 +16,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       prompt,
       {
         inlineData: {
-          data: base64Image.split(';')[1].split(',')[1],
-          mimeType: "image/jpeg",
+          data: base64Image.split(',')[1],
+          mimeType: base64Image.split(';')[0].split(':')[1],
         },
       },
     ]);
