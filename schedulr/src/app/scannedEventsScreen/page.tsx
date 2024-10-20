@@ -11,10 +11,11 @@ const ScannedEventsScreen: React.FC = () => {
 
     const promptGemini = async () => {
         try {
-            const res = await axios.post("/api/gemini", {
+            const res = await axios.post("/api/gemini/image-to-calendar", {
                 base64Image: image
             })
-            setResult(res.data.response);
+            console.log(JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, '')))
+            setResult(res.data.response.replace(/```json/g, '').replace(/```/g, ''));
         }
         catch (error) {
             console.error("Error fetching Gemini API result:", error);
