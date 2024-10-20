@@ -21,7 +21,7 @@ export default function MainFunctionScreen() {
     permissionDenied: "Camera permission denied. Please enable it.",
   };
 
-  if (window?.navigator?.mediaDevices) {
+  if (typeof window !== "undefined" && window?.navigator?.mediaDevices) {
     console.log("Browser supports camera access");
   } else {
     console.log("Browser does not support camera access");
