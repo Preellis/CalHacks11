@@ -1,14 +1,14 @@
 "use client"
+import React, { useState, useRef, createContext } from 'react';
 import { userAtom } from '@/atoms';
-import CameraScreen from '@/components/CameraComponent/page';
 import { useAtom } from 'jotai';
 import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
 import styles from './styles.module.scss';
 import { Camera, CameraType } from 'react-camera-pro';
 import { useRouter } from 'next/navigation';
-import React, { useState, useRef } from 'react';
 import { imageAtom } from '@/atoms';
+import { MenuContext } from '@/commons/context/menuContext';
 
 export default function MainFunctionScreen() {
   const router = useRouter();
@@ -45,26 +45,35 @@ export default function MainFunctionScreen() {
 
       
   return (
-    <div className={styles.container}>
-      <Navbar />
-      <div className={styles.navbarDropdown}>
-
-      </div>
-      <div onClick={() => setMenuStatus(false)} className={menuStatus ? `${styles.darkBackground} ${styles.active}` : `${styles.darkBackground}`}/>
-      <div className={styles.cameraContainer}>
-        <div className={styles.cameraLens}>
-          <Camera 
-              ref={camera}
-              errorMessages={errorMessages}
-          />
+    <MenuContext.Provider value={[menuStatus, setMenuStatus]}>
+      <div className={styles.container}>
+        <Navbar />
+        <div className={menuStatus ? `${styles.navbarDropdown} ${styles.active}` : `${styles.navbarDropdown}`}>
+          <div className={styles.eventContainer}>
+            <div className={styles.events}>
+              <div className={styles.eventName}>
+                <span>Tropical Purple Party</span>
+              </div>
+              <div className={styles.cross}/>
+            </div>
+          </div>
         </div>
-        <div className={styles.snap}>
-          <button className={styles.btnContainer} onClick={() => HandleCamBtn()}>
-            <div></div>
-          </button>
+        <div onClick={() => setMenuStatus(false)} className={menuStatus ? `${styles.darkBackground} ${styles.active}` : `${styles.darkBackground}`}/>
+        <div className={styles.cameraContainer}>
+          <div className={styles.cameraLens}>
+            <Camera 
+                ref={camera}
+                errorMessages={errorMessages}
+            />
+          </div>
+          <div className={styles.snap}>
+            <button className={styles.btnContainer} onClick={() => HandleCamBtn()}>
+              <div></div>
+            </button>
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </MenuContext.Provider>
   );
 };

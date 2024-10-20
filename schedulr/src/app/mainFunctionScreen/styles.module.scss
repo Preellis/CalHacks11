@@ -2,8 +2,6 @@
 
 .container {
   position: relative;
-
-
   .darkBackground {
     position: absolute;
     top: 0;
@@ -13,13 +11,44 @@
     background-color: rgba($dark, 0);
     backdrop-filter: blur(0px);
     z-index: 4;
-    transition: background-color 0.15s cubic-bezier(0.76, 1, 0.24, 0),
-                backdrop-filter 0.15s cubic-bezier(0.76, 1, 0.24, 0);
+    pointer-events: none;
+    transition: background-color 0.15s cubic-bezier(0.76, 0, 0.24, 1),
+                backdrop-filter 0.15s cubic-bezier(0.76, 0, 0.24, 1);
     &.active {
       background-color: rgba($dark, 0.15);
       backdrop-filter: blur(8px);
+      pointer-events: auto;
     }
   }
+  .navbarDropdown {
+    position: absolute;
+    top: 100px;
+    width: 100vw;
+    height: 0px;
+    background-color: rgba($light, 1);
+    box-shadow: 0px 5px 10px 1px rgba(0,0,0,0.2);
+    z-index: 6;
+    transition: height 0.2s cubic-bezier(0.76, 0.2, 0.24, 0.8);
+    &.active {
+      height: 400px;
+    }
+    .eventContainer {
+      position: relative;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .events {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        border: 2px solid rgba($dark, 1);
+        border-radius: 30px;
+      }
+    }
+  }
+
   .cameraContainer {
     position: relative;
     height: calc(100vh - 220px);

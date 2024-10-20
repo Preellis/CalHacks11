@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from "./styles.module.scss";
-import Link from 'next/link';
 
 export default function Footer() {
   const [uploadModalOpened, setUploadModalOpened] = useState(false);
-
-
+  
   return (
     <div className={styles.container}>
       <div className={styles.gallery}>
