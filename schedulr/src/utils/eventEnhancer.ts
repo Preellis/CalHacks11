@@ -36,16 +36,17 @@ not found, return null for that category in .json.
     const res = await axios.post('/api/gemini', {prompt: contextPrompt,})
     event = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
   }
+  if (!event.start) event.start = new Date().toISOString()
   const googleCalendarEvent = {
     summary: event.eventname ?? 'Untitled Event',
     location: event.location ?? 'No location provided',
     description: event.description ?? 'No description provided',
     start: {
-      dateTime: new Date(event.start ?? Date.now()).toISOString(),
+      dateTime: event.start,
       timeZone: 'America/Los_Angeles',
     },
     end: {
-      dateTime: new Date(event.end ?? (Date.now() + 3600000)).toISOString(), // + 1 hour
+      dateTime: new Date(event.end ?? (new Date(event.start).getTime() + 3600000)).toISOString(), // + 1 hour
       timeZone: 'America/Los_Angeles',
     },
   };
