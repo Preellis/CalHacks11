@@ -29,6 +29,7 @@ export default function MainFunctionScreen() {
   //Function that handles entire functionality of camera button
   const HandleCamBtn = async () => {
     if (camera.current) {
+
       const photo = camera.current.takePhoto();
       const res = await axios.post("/api/gemini/image-to-calendar", {
         base64Image: photo
@@ -36,6 +37,7 @@ export default function MainFunctionScreen() {
       const initialEvent = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
       const enhancedEvent = await eventEnhancer(initialEvent, user, userId)
       console.log(enhancedEvent)
+      
     }
   };
 

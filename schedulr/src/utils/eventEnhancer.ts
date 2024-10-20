@@ -34,7 +34,7 @@ The 'start' and 'end' should be in ISO string timestamp format. If any values ar
 not found, return null for that category in .json.
 `
     const res = await axios.post('/api/gemini', {prompt: contextPrompt,})
-    event = JSON.parse(res.data.response)
+    event = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
   }
   const googleCalendarEvent = {
     summary: event.eventname ?? 'Untitled Event',
