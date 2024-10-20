@@ -1,7 +1,7 @@
 import { TokenResponse } from "@react-oauth/google";
 import axios from "axios";
 
-interface CalendarEvent {
+export interface CalendarEvent {
   eventname?: string;
   start?: string;
   end?: string;

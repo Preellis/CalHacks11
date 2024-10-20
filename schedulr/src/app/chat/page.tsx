@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAtomValue } from 'jotai';
 import axios from 'axios';
 import { userAtom, userIdAtom } from '@/atoms';
-import { eventEnhancer } from '@/utils/eventEnhancer';
+import { CalendarEvent, eventEnhancer } from '@/utils/eventEnhancer';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
@@ -39,10 +39,10 @@ const ChatPage = () => {
 
         console.log(geminiResponse.data.response);
 
-        let jsonEvent: any = ""
+        let jsonEvent: CalendarEvent | string = ""
         try {
           jsonEvent = JSON.parse(geminiResponse.data.response.split("```json")[1].split("```")[0]);
-        } catch (error) {
+        } catch (_) {
           jsonEvent = "";
         }
 
@@ -61,7 +61,7 @@ const ChatPage = () => {
           ]);
         } else {
           // Event detected, proceed to add to Google Calendar
-          const enhancedEvent = await eventEnhancer(jsonEvent, user, userId);
+          const enhancedEvent = await eventEnhancer(jsonEvent as CalendarEvent, user, userId);
           console.log(enhancedEvent);
 
           setMessages((prevMessages) => [
