@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useRef, createContext } from 'react';
-import { userAtom } from '@/atoms';
+import { userAtom, userIdAtom } from '@/atoms';
 import { useAtom } from 'jotai';
 import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/footer/Footer';
@@ -9,11 +9,14 @@ import { Camera, CameraType } from 'react-camera-pro';
 import { useRouter } from 'next/navigation';
 import { imageAtom } from '@/atoms';
 import { MenuContext } from '@/commons/context/menuContext';
+import axios from 'axios';
+import { eventEnhancer } from '@/utils/eventEnhancer';
 
 export default function MainFunctionScreen() {
   const router = useRouter();
   const camera = useRef<CameraType>(null);
   const [user, setUser] = useAtom(userAtom);
+  const [userId, setUserId] = useAtom(userIdAtom);
   const [image, setImage] = useAtom(imageAtom);
   const [menuStatus, setMenuStatus] = useState(false);
   console.log(user);
@@ -28,19 +31,19 @@ export default function MainFunctionScreen() {
   } else {
     console.log("Browser does not support camera access");
   }
-
-  //Saves photo to image state
-  const SaveTakenPhoto = () => {
-    if (camera.current) {
-        const photo = camera.current.takePhoto();
-        setImage(photo.toString());
-        console.log(photo)
-    }
-  };
   //Function that handles entire functionality of camera button
-  const HandleCamBtn = () => {
-    SaveTakenPhoto();
-    router.push('/scannedEventsScreen')
+  const HandleCamBtn = async () => {
+    if (camera.current) {
+      const photo = camera.current.takePhoto();
+      setImage(photo.toString());
+      console.log(photo)
+      const res = await axios.post("/api/gemini/image-to-calendar", {
+        base64Image: image
+      })
+      const initialEvent = JSON.parse(res.data.response.replace(/```json/g, '').replace(/```/g, ''))
+      const enhancedEvent = await eventEnhancer(initialEvent, user, userId)
+      console.log(enhancedEvent)
+    }
   };
 
       

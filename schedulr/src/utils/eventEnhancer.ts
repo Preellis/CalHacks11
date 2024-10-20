@@ -9,8 +9,8 @@ interface CalendarEvent {
   description?: string;
   context?: string;
 }
-export const eventEnhancer = async (event: CalendarEvent, user?: TokenResponse, userId?: string) => {
-  if (!user || !userId) return false;
+export const eventEnhancer = async (event: CalendarEvent, user: TokenResponse | null, userId: string | null): Promise<CalendarEvent> => {
+  if (!user || !userId) return event;
   if (event.context) {
     const chromaContext = axios.post(
       '/api/chroma/get-context', 
@@ -63,9 +63,8 @@ not found, return null for that category in .json.
     );
     console.log('Event created: ', response.data.htmlLink);
     localStorage.setItem('events', JSON.stringify([...JSON.parse(localStorage.getItem('events') ?? '[]'), googleCalendarEvent]));
-    return true;
   } catch (error) {
     console.error('Error creating event: ', error);
-    return false;
   }
+  return event;
 }

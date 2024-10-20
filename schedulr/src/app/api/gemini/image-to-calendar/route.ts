@@ -16,8 +16,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       prompt,
       {
         inlineData: {
-          data: base64Image,
-          mimeType: "image/png",
+          data: base64Image.split(';')[1].split(',')[1],
+          mimeType: "image/jpeg",
         },
       },
     ]);
@@ -27,6 +27,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ response: result });
   } catch (error) {
     console.error("Error generating content:", error);
-    return NextResponse.json({ error: "An error occurred while processing the image" }, { status: 500 });
+    return NextResponse.json({ error: "An error occurred while processing the image" + error }, { status: 500 });
   }
 }
