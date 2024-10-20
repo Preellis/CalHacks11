@@ -19,7 +19,7 @@ export const eventEnhancer = async (event: CalendarEvent, user: TokenResponse | 
         query: event.context
       }
     )
-    const perplexityContext = ''
+    const perplexityContext = (await axios.post('/api/perplexity', {prompt: event.context})).data.response
 
     const contextPrompt = 
 `\
