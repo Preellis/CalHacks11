@@ -49,6 +49,9 @@
       object-fit: contain;
       margin-right: 20px;
     }
+    svg {
+      transition: filter 0.2s cubic-bezier(0.76, 1, 0.24, 0);
+    }
     span {
       font-weight: 500;
       font-size: 1.2em;
@@ -62,6 +65,9 @@
     }
     &:hover span {
       color: $light;
+    }
+    &:hover svg {
+      filter: invert(1);
     }
   }
 }

@@ -84,14 +84,17 @@ export default function Home() {
         <h3>Powered by AI.</h3>
       </div>
       {user ? (
-        <div>Logged in!</div>
+        <button className={styles.loginBtn} style={{justifyContent: "center", gap: "10px"}} onClick={() => router.push('/mainFunctionScreen')}>
+          <span>You are logged in!</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
       ) : (
         <>
           <button className={styles.loginBtn} onClick={() => login()}>
             <img src="/googleicon.webp" alt="GOOGLE"/>
             <span>Sign in with Google</span>
           </button>
-          <button className={styles.loginBtn} onClick={() => login()}>
+          <button className={styles.loginBtn} onClick={() => null}>
             <img src="/appleicon.png" alt="APPLE" style={{padding: "5px"}}/>
             <span>Sign in with Apple</span>
           </button>
