@@ -1,14 +1,16 @@
 "use client";
 import { useState } from 'react';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import axios from 'axios';
-import { userIdAtom } from '@/atoms';
+import { userAtom, userIdAtom } from '@/atoms';
+import { eventEnhancer } from '@/utils/eventEnhancer';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [userId] = useAtom(userIdAtom);
+  const userId = useAtomValue(userIdAtom);
+  const user = useAtomValue(userAtom);
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -32,16 +34,23 @@ const ChatPage = () => {
 
         // Step 3: Ask Gemini if it's an event or not
         const geminiResponse = await axios.post('/api/gemini', {
-            prompt: `Is "${userInput}" a public event? If yes, extract the details (title, location, startDateTime, endDateTime) as JSON. If not, set jsonEvent to "" and return.`, // Using userInput directly
+            prompt: `Is "${userInput}" a public event? If yes, The .json file should be in the format of 'eventname', 'description', 'start', 'end', 'location', 'context'. The 'start' and 'end' should be in ISO string timestamp format. 'context' should contain anything that may help you figure out more about the event in searches. If any values are not found, return null for that category in .json. If not an event, return an invalid json`, // Using userInput directly
         });
 
-        const { jsonEvent, chatResponse } = geminiResponse.data;
+        console.log(geminiResponse.data.response);
+
+        let jsonEvent: any = ""
+        try {
+          jsonEvent = JSON.parse(geminiResponse.data.response.split("```json")[1].split("```")[0]);
+        } catch (error) {
+          jsonEvent = "";
+        }
 
         // Step 4: Check if an event is detected
-        if (!jsonEvent || jsonEvent.trim() === "") {
-            // If no event detected, use the userInput as a normal conversation prompt
-            const followUpResponse = await axios.post('/api/gemini', {
-              prompt: `Based on the message: "${userInput}", how would you respond in a conversational way? Do not give multiple possible responses, only 1. Always try to help the users schedule something. If they give you an event, possibly search it up and suggest adding it to gcal.`,
+        if (!jsonEvent) {
+          // If no event detected, use the userInput as a normal conversation prompt
+          const followUpResponse = await axios.post('/api/gemini', {
+            prompt: `Based on the message: "${userInput}", how would you respond in a conversational way? Do not give multiple possible responses, only 1. Always try to help the users schedule something. If they give you an event, possibly search it up and suggest adding it to gcal. Use this context: ${contextResult}`,
           });
 
           const followUpChatResponse = followUpResponse.data.response; 
@@ -50,24 +59,15 @@ const ChatPage = () => {
               ...prevMessages,
               `KronAI: ${followUpChatResponse || "I'm not sure about that."}`,
           ]);
-      } else {
-            // Event detected, proceed to add to Google Calendar
-            const eventDetails = JSON.parse(jsonEvent);
-            console.log("eventDetails:", eventDetails);
+        } else {
+          // Event detected, proceed to add to Google Calendar
+          const enhancedEvent = await eventEnhancer(jsonEvent, user, userId);
+          console.log(enhancedEvent);
 
-            const gcalEvent = {
-                title: eventDetails.title,
-                location: eventDetails.location,
-                dateTime: eventDetails.startDateTime,
-                endDateTime: eventDetails.endDateTime,
-            };
-
-            await axios.post('/api/gcal/add-event', gcalEvent);
-
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                'KronAI: The event has been added to your Google Calendar.',
-            ]);
+          setMessages((prevMessages) => [
+              ...prevMessages,
+              'KronAI: The event has been added to your Google Calendar.',
+          ]);
         }
 
     } catch (error) {
