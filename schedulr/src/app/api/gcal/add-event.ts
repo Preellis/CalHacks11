@@ -18,14 +18,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         title: eventDetails.title, // Event title
         location: eventDetails.location, // Event location
 
-        start: {
           dateTime: eventDetails.dateTime, // Start time in ISO format
-      
-        },
-        end: {
-          dateTime: eventDetails.endDateTime, // End time in ISO format
-      
-        },
+
+          endDateTime: eventDetails.endDateTime, // End time in ISO format
       
         reminders: {
           useDefault: false,

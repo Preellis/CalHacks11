@@ -26,9 +26,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       nResults: 3, 
     });
 
-
-
-    
     return NextResponse.json(result.documents[0]);
   } catch (error) {
     console.error('Error:', error);
